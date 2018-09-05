@@ -1,5 +1,5 @@
 # Biped
-simple WIndows keyboard emulation for Infinity Foot Controls
+simple Windows keyboard emulation for Infinity Foot Controls
 
 
 The existing Pedable application lacks some features (multiple pedals down at once) and has some issues (dropping pedal up events).
