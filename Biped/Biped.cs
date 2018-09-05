@@ -40,8 +40,14 @@ namespace Biped
         {
             string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string configPath = Path.Combine(dir, "config.yaml");
-            config.Load(configPath);
 
+            try
+            {
+                config.Load(configPath);
+            } catch (Exception e)
+            {
+                Console.WriteLine("Error loading config file; make sure config.yaml exists in the same directory as Biped.exe");
+            }
             device = HidDevices.Enumerate(VendorID, ProductID).FirstOrDefault();
             device.OpenDevice();
 
