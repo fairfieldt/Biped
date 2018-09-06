@@ -15,6 +15,7 @@
             <Setter Property="BorderBrush" Value="LightGray"></Setter>
             <Setter Property="BorderThickness" Value="1"></Setter>
         </Style>
+        <local:ShowWindowCommand x:Key="ShowWindowCommand"/>
     </Window.Resources>
     <Grid>
 
@@ -61,10 +62,9 @@
         
         <tb:TaskbarIcon
             IconSource="icon.ico"
-            MenuActivation="LeftOrRightClick">
+            MenuActivation="LeftOrRightClick"
+            DoubleClickCommand="{StaticResource ShowWindowCommand}">
             
-            
-
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Bring to Front" Name="MenuToFront" Click="MenuToFront_Click"/>
