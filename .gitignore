@@ -1,7 +1,7 @@
 packages/
 .vs/
-Biped/bin
-Biped/obj
+biped/bin
+biped/obj/
 Biped/Biped.csproj.user
 Biped/Biped_TemporaryKey.pfx
 Biped/publish/
