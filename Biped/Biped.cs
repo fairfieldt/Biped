@@ -1,14 +1,14 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Windows.Input;
 using HidLibrary;
 
-namespace Biped
+namespace biped
 {
 
     enum Pedal
     {
+        NONE,
         LEFT,
         MIDDLE,
         RIGHT
@@ -20,45 +20,34 @@ namespace Biped
         UP
     }
 
-    class Biped
+    public class Biped
     {
         private const int VendorID = 0x5f3;
         private const int ProductID = 0xFF;
         private static byte LEFT_MASK = 0x01;
         private static byte MIDDLE_MASK = 0x02;
         private static byte RIGHT_MASK = 0x04;
-        private static HidDevice device;
+        private HidDevice device;
 
-        private static PedalState LeftState = PedalState.UP;
-        private static PedalState MiddleState = PedalState.UP;
-        private static PedalState RightState = PedalState.UP;
+        private PedalState LeftState = PedalState.UP;
+        private PedalState MiddleState = PedalState.UP;
+        private PedalState RightState = PedalState.UP;
 
-        private static Input input = new Input();
-        private static Config config = new Config();
+        private Input input = new Input();
+        private Config config;
 
-        static void Main(string[] args)
+        public Biped(Config config)
         {
-            string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string configPath = Path.Combine(dir, "config.yaml");
-
-            try
-            {
-                config.Load(configPath);
-            } catch (Exception e)
-            {
-                Console.WriteLine("Error loading config file; make sure config.yaml exists in the same directory as Biped.exe");
-            }
+            this.config = config;
             device = HidDevices.Enumerate(VendorID, ProductID).FirstOrDefault();
             device.OpenDevice();
 
             device.MonitorDeviceEvents = true;
 
             device.ReadReport(OnReport);
-
-            Console.ReadLine();
         }
 
-        private static void OnReport(HidReport report)
+        private void OnReport(HidReport report)
         {
             var status = report.Data[0];
             Console.WriteLine(status);
@@ -72,7 +61,8 @@ namespace Biped
                     LeftState = PedalState.DOWN;
                     HandlePedalEvent(Pedal.LEFT, LeftState);
                 }
-            } else
+            }
+            else
             {
                 var sendPedalUp = initialLeftState == PedalState.DOWN;
                 LeftState = PedalState.UP;
@@ -89,7 +79,8 @@ namespace Biped
                     MiddleState = PedalState.DOWN;
                     HandlePedalEvent(Pedal.MIDDLE, MiddleState);
                 }
-            } else
+            }
+            else
             {
                 var sendPedalUp = initialMiddleState == PedalState.DOWN;
                 MiddleState = PedalState.UP;
@@ -106,8 +97,9 @@ namespace Biped
                     RightState = PedalState.DOWN;
                     HandlePedalEvent(Pedal.RIGHT, RightState);
                 }
-                
-            } else
+
+            }
+            else
             {
                 var sendPedalUp = initialRightState == PedalState.DOWN;
                 RightState = PedalState.UP;
@@ -121,11 +113,11 @@ namespace Biped
 
         }
 
-        private static void HandlePedalEvent(Pedal pedal, PedalState state)
+        private void HandlePedalEvent(Pedal pedal, PedalState state)
         {
-            Console.WriteLine("Pedal {0} status: {1}", pedal.ToString("g"), state.ToString("g"));
-
-            switch(pedal)
+            System.Diagnostics.Debug.WriteLine("Pedal {0} status: {1}", pedal.ToString("g"), state.ToString("g"));
+            System.Diagnostics.Debug.WriteLine("Sending key {0} {1}", config.Left, (Key)config.Left);
+            switch (pedal)
             {
                 case Pedal.LEFT:
                     input.SendKey(config.Left, state);

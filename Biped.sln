@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biped", "Biped\Biped.csproj", "{F3205140-B619-464C-A744-F99DA86298D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "biped", "biped\biped.csproj", "{9F9F12F0-FBEE-4E42-94AE-364D363A67CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F3205140-B619-464C-A744-F99DA86298D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3205140-B619-464C-A744-F99DA86298D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3205140-B619-464C-A744-F99DA86298D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3205140-B619-464C-A744-F99DA86298D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9F12F0-FBEE-4E42-94AE-364D363A67CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9F12F0-FBEE-4E42-94AE-364D363A67CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9F12F0-FBEE-4E42-94AE-364D363A67CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9F12F0-FBEE-4E42-94AE-364D363A67CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {611B5A34-BE36-4B39-B15B-5A256D75810C}
+		SolutionGuid = {99205960-64D0-47A4-A884-79880F5D576F}
 	EndGlobalSection
 EndGlobal

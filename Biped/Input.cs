@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 
-namespace Biped
+namespace biped
 {
     class Input
     {

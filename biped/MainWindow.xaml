@@ -1,0 +1,80 @@
+﻿<Window x:Class="biped.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:biped"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        mc:Ignorable="d"
+        Title="Biped" Height="190" Width="260"
+        KeyUp="OnKeyUp" Closing="Window_Closing" >
+
+
+    <Window.Resources>
+        <Style x:Key="BlackBorderStyle" TargetType="Label">
+            <Setter Property="BorderBrush" Value="LightGray"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+
+     <!---  <Label Content="Choose Pedal Keys"/> -->
+
+        <Label Content="Left" Grid.Row="0" Grid.Column="0" Margin="3" HorizontalContentAlignment="Center"/>
+        <Label Content="Middle" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalContentAlignment="Center"/>
+        <Label Content="Right" Grid.Row="2" Grid.Column="0" Margin="3" HorizontalContentAlignment="Center"/>
+        <Label Grid.Row="0" Grid.Column="1" Name="LeftText" 
+                 Foreground="Gray" Padding="3" Margin="5" Height="30"
+                 Content="None" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                 Style="{StaticResource BlackBorderStyle}"
+                 PreviewMouseUp="LeftText_PreviewMouseUp"/>
+        <Label Grid.Row="1" Grid.Column="1" Name="MiddleText" 
+                 Foreground="Gray" Padding="3" Margin="5" Height="30"
+                 Content="None" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                 Style="{StaticResource BlackBorderStyle}"
+                 PreviewMouseUp="MiddleText_PreviewMouseUp"/>
+        <Label Grid.Row="2" Grid.Column="1" Name="RightText" 
+                 Foreground="Gray" Padding="3" Margin="5" Height="30"
+                 Content="None" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                 Style="{StaticResource BlackBorderStyle}"
+                 PreviewMouseUp="RightText_PreviewMouseUp"/>
+
+        
+
+        <Label Grid.Row="3" Name="StatusText" HorizontalAlignment="Stretch" 
+               HorizontalContentAlignment="Center" 
+               Content="Click a box to change a pedal."
+               Grid.ColumnSpan="2"/>
+        
+        <tb:TaskbarIcon
+            IconSource="icon.ico"
+            MenuActivation="LeftOrRightClick">
+            
+            
+
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Bring to Front" Name="MenuToFront" Click="MenuToFront_Click"/>
+                    <MenuItem Header="Quit" Name="MenuQuit" Click="MenuQuit_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+
+
+
+    </Grid>
+
+</Window>

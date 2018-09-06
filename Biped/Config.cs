@@ -1,38 +1,17 @@
-﻿using System;
-using System.IO;
-using YamlDotNet.RepresentationModel;
-
-namespace Biped
+﻿
+namespace biped
 {
-    class Config
+    public class Config
     {
         public int Left;
         public int Middle;
         public int Right;
-       
 
-        public void Load(string path)
+        public Config(int left, int middle, int right)
         {
-            var file = File.OpenText(path);
-
-            var yaml = new YamlStream();
-
-            yaml.Load(file);
-
-            var mapping =
-                (YamlMappingNode)yaml.Documents[0].RootNode;
-
-            var children = mapping.Children;
-
-            var l = children[new YamlScalarNode("left")];
-            var m = children[new YamlScalarNode("middle")];
-            var r = children[new YamlScalarNode("right")];
-
-            Left = Convert.ToUInt16(l.ToString(), 16);
-            Middle = Convert.ToUInt16(m.ToString(), 16);
-            Right = Convert.ToUInt16(r.ToString(), 16);
-
-
+            Left = left;
+            Middle = middle;
+            Right = right;
         }
     }
 }
