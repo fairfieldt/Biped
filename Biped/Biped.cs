@@ -125,7 +125,6 @@ namespace Biped
         {
             Console.WriteLine("Pedal {0} status: {1}", pedal.ToString("g"), state.ToString("g"));
 
-            //left send Q, middle send W, right send E
             switch(pedal)
             {
                 case Pedal.LEFT:
