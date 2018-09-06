@@ -6,8 +6,5 @@ The existing Pedable application lacks some features (multiple pedals down at on
 
 This is a super simple alternative for those who want to send keyboard input with their foot pedals.
 
-
-config.yaml allows you to set the key for each pedal left, middle, and right.  The keys need to be set as the hexidecial keyCode. (For now, this should obviously be better)
-
-Make sure config.yaml is in the same directory as Biped.exe
-
+Run Biped.exe and use the GUI to configure your pedals.  Configuration is stored in the registry.  Biped will run in the system tray; to
+exit right click on the tray icon.
