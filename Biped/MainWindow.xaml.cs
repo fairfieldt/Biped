@@ -31,6 +31,7 @@ namespace biped
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static string NO_DEVICE_DETECTED_TEXT = "No pedal found. Make sure it's connected.";
         private static string BIND_KEY_TEXT = "Hit a key to change the bind.";
         private static string BIND_BUTTON_TEXT = "Click a box to change a pedal.";
 
@@ -44,12 +45,19 @@ namespace biped
             InitializeComponent();
             LoadPedalBinds();
             biped = new Biped(config);
+            if (biped.DeviceConnected != true)
+            {
+                StatusText.Content = NO_DEVICE_DETECTED_TEXT;
+            }
         }
 
         private void RecordPedalBind(Pedal pedal)
         {
-            currentPedalToSet = pedal;
-            StatusText.Content = BIND_KEY_TEXT;
+            if (biped.DeviceConnected)
+            {
+                currentPedalToSet = pedal;
+                StatusText.Content = BIND_KEY_TEXT;
+            }
         }
 
         private void OnKeyUp(object sender, KeyEventArgs args)

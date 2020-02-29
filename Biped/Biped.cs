@@ -35,16 +35,25 @@ namespace biped
 
         private Input input = new Input();
         private Config config;
+        public bool DeviceConnected { get; set; }
 
         public Biped(Config config)
         {
             this.config = config;
-            device = HidDevices.Enumerate(VendorID, ProductID).FirstOrDefault();
-            device.OpenDevice();
+            var devices = HidDevices.Enumerate(VendorID, ProductID);
+            if (devices.Count() == 0)
+            {
+                DeviceConnected = false;
+            } else
+            {
+                device = devices.First();
+                DeviceConnected = true;
+                device.OpenDevice();
 
-            device.MonitorDeviceEvents = true;
+                device.MonitorDeviceEvents = true;
 
-            device.ReadReport(OnReport);
+                device.ReadReport(OnReport);
+            }
         }
 
         private void OnReport(HidReport report)
