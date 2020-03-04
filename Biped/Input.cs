@@ -6,58 +6,35 @@ namespace biped
 {
     class Input
     {
-
+        private static readonly uint KEYEVENTF_SCANCODE = 0x08;
+        private static readonly uint KEYEVENTF_KEYUP = 0x02;
         [DllImport("user32.dll")]
         internal static extern uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
 
-        public void SendKey(int keyCode, PedalState state)
+        public void SendKey(uint keyCode, PedalState state)
         {
-            if (state == PedalState.DOWN)
+            uint flags = KEYEVENTF_SCANCODE;
+            if (state == PedalState.UP)
             {
-                SendKeyDown(keyCode);
+                flags |= KEYEVENTF_KEYUP;
             }
-            else
-            {
-                SendKeyUp(keyCode);
-            }
-        }
-
-        public void SendKeyDown(int keyCode)
-        {
-            INPUT input = new INPUT
-            {
-                Type = 1
-            };
-            input.Data.Keyboard = new KEYBDINPUT();
-            input.Data.Keyboard.Vk = (ushort)keyCode;
-            input.Data.Keyboard.Scan = 0;
-            input.Data.Keyboard.Flags = 0;
-            input.Data.Keyboard.Time = 0;
-            input.Data.Keyboard.ExtraInfo = IntPtr.Zero;
-            INPUT[] inputs = new INPUT[] { input };
-            if (SendInput(1, inputs, Marshal.SizeOf(typeof(INPUT))) == 0)
-            {
-                Console.WriteLine("Error in sendKeyDown");
-            }
-        }
-
-        public void SendKeyUp(int keyCode)
-        {
 
             INPUT input = new INPUT
             {
                 Type = 1
             };
-            input.Data.Keyboard = new KEYBDINPUT();
-            input.Data.Keyboard.Vk = (ushort)keyCode;
-            input.Data.Keyboard.Scan = 0;
-            input.Data.Keyboard.Flags = 2;
-            input.Data.Keyboard.Time = 0;
-            input.Data.Keyboard.ExtraInfo = IntPtr.Zero;
+            input.Data.Keyboard = new KEYBDINPUT
+            {
+                Vk = 0,
+                Scan = (ushort)keyCode,
+                Flags = flags,
+                Time = 0,
+                ExtraInfo = IntPtr.Zero
+            };
             INPUT[] inputs = new INPUT[] { input };
             if (SendInput(1, inputs, Marshal.SizeOf(typeof(INPUT))) == 0)
             {
-                Console.WriteLine("Error in SendKeyUp");
+                Console.WriteLine("Error in sendKey");
             }
         }
 

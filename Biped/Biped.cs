@@ -24,17 +24,17 @@ namespace biped
     {
         private const int VendorID = 0x5f3;
         private const int ProductID = 0xFF;
-        private static byte LEFT_MASK = 0x01;
-        private static byte MIDDLE_MASK = 0x02;
-        private static byte RIGHT_MASK = 0x04;
-        private HidDevice device;
+        private const byte LEFT_MASK = 0x01;
+        private const byte MIDDLE_MASK = 0x02;
+        private const byte RIGHT_MASK = 0x04;
+        private readonly HidDevice device;
 
         private PedalState LeftState = PedalState.UP;
         private PedalState MiddleState = PedalState.UP;
         private PedalState RightState = PedalState.UP;
 
-        private Input input = new Input();
-        private Config config;
+        private readonly Input input = new Input();
+        private readonly Config config;
         public bool DeviceConnected { get; set; }
 
         public Biped(Config config)

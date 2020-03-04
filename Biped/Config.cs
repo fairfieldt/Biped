@@ -3,11 +3,11 @@ namespace biped
 {
     public class Config
     {
-        public int Left;
-        public int Middle;
-        public int Right;
+        public uint Left { get; set; }
+        public uint Middle { get; set; }
+        public uint Right { get; set; }
 
-        public Config(int left, int middle, int right)
+        public Config(uint left, uint middle, uint right)
         {
             Left = left;
             Middle = middle;

@@ -1,15 +1,23 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 using System.Windows.Input;
 
 
+
 namespace biped
 {
+
+    public enum MapType : uint
+    {
+        MAPVK_VK_TO_VSC = 0x0,
+        MAPVK_VSC_TO_VK = 0x1,
+        MAPVK_VK_TO_CHAR = 0x2,
+        MAPVK_VSC_TO_VK_EX = 0x3,
+    }
 
     public class ShowWindowCommand : ICommand
     {
@@ -31,12 +39,12 @@ namespace biped
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static string NO_DEVICE_DETECTED_TEXT = "No pedal found. Make sure it's connected.";
-        private static string BIND_KEY_TEXT = "Hit a key to change the bind.";
-        private static string BIND_BUTTON_TEXT = "Click a box to change a pedal.";
+        private const string NO_DEVICE_DETECTED_TEXT = "No pedal found. Make sure it's connected.";
+        private const string BIND_KEY_TEXT = "Hit a key to change the bind.";
+        private const string BIND_BUTTON_TEXT = "Click a box to change a pedal.";
 
-        private SettingsStorage settings = new SettingsStorage();
-        private Biped biped;
+        private readonly SettingsStorage settings = new SettingsStorage();
+        private readonly Biped biped;
         private Config config;
 
         private Pedal currentPedalToSet = Pedal.NONE;
@@ -78,14 +86,15 @@ namespace biped
             }
 
             int vKey = KeyInterop.VirtualKeyFromKey(args.Key);
-            SavePedalBind(currentPedalToSet, vKey);
+            uint scanCode = ScanCodeFromVKey(vKey);
+            SavePedalBind(currentPedalToSet, scanCode);
 
             StatusText.Content = BIND_BUTTON_TEXT;
             currentPedalToSet = Pedal.NONE;
 
         }
 
-        private void SavePedalBind(Pedal pedal, int keyCode)
+        private void SavePedalBind(Pedal pedal, uint keyCode)
         {
             settings.SaveToRegistry(pedal.ToString("g"), keyCode);
             switch (pedal)
@@ -102,21 +111,36 @@ namespace biped
             }
         }
 
-        private Key vKeyToKey(int vKey)
+        private Key VKeyToKey(int vKey)
         {
             return KeyInterop.KeyFromVirtualKey(vKey);
+            
+        }
+
+        [DllImport("user32.dll")]
+        private static extern uint MapVirtualKey(uint uCode, MapType uMapType);
+
+
+        private uint ScanCodeFromVKey(int vKey)
+        {
+            return MapVirtualKey((uint)vKey, MapType.MAPVK_VK_TO_VSC);
+        }
+
+        private int VKeyFromScanCode(uint scanCode)
+        {
+            return (int)MapVirtualKey(scanCode, MapType.MAPVK_VSC_TO_VK);
         }
 
         private void LoadPedalBinds()
         {
-            int left = settings.GetFromRegistry(Pedal.LEFT.ToString("g"));
-            int middle = settings.GetFromRegistry(Pedal.MIDDLE.ToString("g"));
-            int right = settings.GetFromRegistry(Pedal.RIGHT.ToString("g"));
+            uint left = settings.GetFromRegistry(Pedal.LEFT.ToString("g"));
+            uint middle = settings.GetFromRegistry(Pedal.MIDDLE.ToString("g"));
+            uint right = settings.GetFromRegistry(Pedal.RIGHT.ToString("g"));
 
             config = new Config(left, middle, right);
-            LeftText.Content = vKeyToKey(left).ToString();
-            MiddleText.Content = vKeyToKey(middle).ToString();
-            RightText.Content = vKeyToKey(right).ToString();
+            LeftText.Content = VKeyToKey(VKeyFromScanCode(left)).ToString();
+            MiddleText.Content = VKeyToKey(VKeyFromScanCode(middle)).ToString();
+            RightText.Content = VKeyToKey(VKeyFromScanCode(right)).ToString();
         }
 
         private void LeftText_PreviewMouseUp(object sender, MouseButtonEventArgs e)

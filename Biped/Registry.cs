@@ -14,7 +14,7 @@ namespace biped
         private const string keyName = userRoot + "\\" + subkey;
 
 
-        public void SaveToRegistry(string key, int value)
+        public void SaveToRegistry(string key, uint value)
         {
 
             // An int value can be stored without specifying the
@@ -25,12 +25,12 @@ namespace biped
             Registry.SetValue(keyName, key, value);
         }
 
-        public int GetFromRegistry(string key)
+        public uint GetFromRegistry(string key)
         {
             var value =  Registry.GetValue(keyName, key, 0);
             if (value != null)
             {
-                return (int)value;
+                return Convert.ToUInt32(value);
             }
             return 0;
 
