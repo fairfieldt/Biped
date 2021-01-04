@@ -61,7 +61,7 @@ namespace biped
 
         public void ApplyCommandLineBindings(uint left, uint middle, uint right)
         {
-            MessageBox.Show($"Applying Keybind Left: {VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left}), " +
+            System.Diagnostics.Debug.WriteLine($"Applying Keybind Left: {VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left}), " +
                             $"Middle: {VKeyToKey(VKeyFromScanCode(middle)).ToString()} ({middle}), " +
                             $"Right: {VKeyToKey(VKeyFromScanCode(right)).ToString()} ({right})");
 
