@@ -59,31 +59,32 @@ namespace biped
             }
         }
 
+        public void ApplyCommandLineBindings(uint left, uint middle, uint right)
+        {
+            MessageBox.Show($"Applying Keybind Left: {VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left}), " +
+                            $"Middle: {VKeyToKey(VKeyFromScanCode(middle)).ToString()} ({middle}), " +
+                            $"Right: {VKeyToKey(VKeyFromScanCode(right)).ToString()} ({right})");
+
+            SavePedalBind(Pedal.LEFT, left);
+            SavePedalBind(Pedal.MIDDLE, middle);
+            SavePedalBind(Pedal.RIGHT, right);
+
+            LoadPedalBinds();
+        }
+
         private void RecordPedalBind(Pedal pedal)
         {
-            if (biped.DeviceConnected)
-            {
+            //if (biped.DeviceConnected)
+            //{
                 currentPedalToSet = pedal;
                 StatusText.Content = BIND_KEY_TEXT;
-            }
+            //}
         }
 
         private void OnKeyUp(object sender, KeyEventArgs args)
         {
-            switch (currentPedalToSet)
-            {
-                case Pedal.LEFT:
-                    LeftText.Content = args.Key;
-                    break;
-                case Pedal.MIDDLE:
-                    MiddleText.Content = args.Key;
-                    break;
-                case Pedal.RIGHT:
-                    RightText.Content = args.Key;
-                    break;
-                case Pedal.NONE:
-                    return;
-            }
+            if (currentPedalToSet == Pedal.NONE) 
+                return;
 
             int vKey = KeyInterop.VirtualKeyFromKey(args.Key);
             uint scanCode = ScanCodeFromVKey(vKey);
@@ -92,6 +93,7 @@ namespace biped
             StatusText.Content = BIND_BUTTON_TEXT;
             currentPedalToSet = Pedal.NONE;
 
+            LoadPedalBinds();
         }
 
         private void SavePedalBind(Pedal pedal, uint keyCode)
@@ -138,9 +140,9 @@ namespace biped
             uint right = settings.GetFromRegistry(Pedal.RIGHT.ToString("g"));
 
             config = new Config(left, middle, right);
-            LeftText.Content = VKeyToKey(VKeyFromScanCode(left)).ToString();
-            MiddleText.Content = VKeyToKey(VKeyFromScanCode(middle)).ToString();
-            RightText.Content = VKeyToKey(VKeyFromScanCode(right)).ToString();
+            LeftText.Content = $"{VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left})";
+            MiddleText.Content = $"{VKeyToKey(VKeyFromScanCode(middle)).ToString()} ({middle})";
+            RightText.Content = $"{VKeyToKey(VKeyFromScanCode(right)).ToString()} ({right})";
         }
 
         private void LeftText_PreviewMouseUp(object sender, MouseButtonEventArgs e)
