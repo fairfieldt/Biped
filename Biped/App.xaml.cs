@@ -65,12 +65,12 @@ namespace biped
                     return new uint[0];
                 }
             }
-            catch (FormatException f)
+            catch (FormatException)
             {
-                MessageBox.Show("Binding values must be the integer key system code.");
+                MessageBox.Show("Binding values must be the integer key code!");
                 return new uint[0];
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Invalid Command Line Parameters!");
                 return new uint[0];
