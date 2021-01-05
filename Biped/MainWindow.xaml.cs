@@ -47,6 +47,8 @@ namespace biped
         private readonly Biped biped;
         private Config config;
 
+        private DateTime lastBindTime;
+
         private Pedal currentPedalToSet = Pedal.NONE;
         public MainWindow()
         {
@@ -76,6 +78,9 @@ namespace biped
         {
             if (biped.DeviceConnected)
             {
+                if (WasJustBound())
+                   return;
+
                 currentPedalToSet = pedal;
                 StatusText.Content = BIND_KEY_TEXT;
             }
@@ -103,15 +108,15 @@ namespace biped
 
             if (args.LeftButton == MouseButtonState.Pressed)
             {
-                SavePedalBind(currentPedalToSet, (uint)Config.MOUSE_BUTTON_CODES.Left);
+                SavePedalBind(currentPedalToSet, (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseLeft);
             }
             else if (args.MiddleButton == MouseButtonState.Pressed)
             {
-                SavePedalBind(currentPedalToSet, (uint)Config.MOUSE_BUTTON_CODES.Middle);
+                SavePedalBind(currentPedalToSet, (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseMiddle);
             }
             else if (args.RightButton == MouseButtonState.Pressed)
             {
-                SavePedalBind(currentPedalToSet, (uint)Config.MOUSE_BUTTON_CODES.Right);
+                SavePedalBind(currentPedalToSet, (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseRight);
             }
 
             StatusText.Content = BIND_BUTTON_TEXT;
@@ -134,6 +139,7 @@ namespace biped
                     config.Right = keyCode;
                     break;
             }
+            lastBindTime = DateTime.Now;
         }
 
         private Key VKeyToKey(int vKey)
@@ -159,11 +165,11 @@ namespace biped
         {
             switch (btnCode)
             {
-                case (uint)Config.MOUSE_BUTTON_CODES.Left:
+                case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseLeft:
                     return $"Mouse Btn Left ({btnCode})";
-                case (uint)Config.MOUSE_BUTTON_CODES.Middle:
+                case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseMiddle:
                     return $"Mouse Btn Middle ({btnCode})";
-                case (uint)Config.MOUSE_BUTTON_CODES.Right:
+                case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseRight:
                     return $"Mouse Btn Right ({btnCode})";
                 default:
                     return $"{VKeyToKey(VKeyFromScanCode(btnCode)).ToString()} ({btnCode})";
@@ -186,6 +192,11 @@ namespace biped
                 biped.UpdateConfig(config);
         }
 
+        private bool WasJustBound()
+        {
+            return lastBindTime.AddSeconds(0.5) > DateTime.Now;
+        }
+
         private void LeftText_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             RecordPedalBind(Pedal.LEFT);
@@ -194,13 +205,11 @@ namespace biped
         private void MiddleText_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             RecordPedalBind(Pedal.MIDDLE);
-
         }
 
         private void RightText_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             RecordPedalBind(Pedal.RIGHT);
-
         }
 
         private void MenuQuit_Click(object sender, RoutedEventArgs e)

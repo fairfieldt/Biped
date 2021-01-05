@@ -29,20 +29,24 @@ namespace biped
             }
 
             INPUT input;
-            if (keyCode == 1000 || keyCode == 2000 || keyCode == 3000)
+
+            //if (keyCode == 1000 || keyCode == 2000 || keyCode == 3000)
+            if (Enum.IsDefined(typeof(CustomButtons.MOUSE_BUTTON_CODES), keyCode))
             {
                 uint mFlags = 0;
                 switch (keyCode)
                 {
-                    case 1000:
+                    case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseLeft:
                         mFlags = state == PedalState.UP ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN;
                         break;
-                    case 2000:
+                    case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseMiddle:
                         mFlags = state == PedalState.UP ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN;
                         break;
-                    case 3000:
+                    case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseRight:
                         mFlags = state == PedalState.UP ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN;
                         break;
+                    default:
+                        return;
                 }
 
                 input = new INPUT
