@@ -74,11 +74,11 @@ namespace biped
 
         private void RecordPedalBind(Pedal pedal)
         {
-            //if (biped.DeviceConnected)
-            //{
+            if (biped.DeviceConnected)
+            {
                 currentPedalToSet = pedal;
                 StatusText.Content = BIND_KEY_TEXT;
-            //}
+            }
         }
 
         private void OnKeyUp(object sender, KeyEventArgs args)
@@ -93,7 +93,30 @@ namespace biped
             StatusText.Content = BIND_BUTTON_TEXT;
             currentPedalToSet = Pedal.NONE;
 
-            LoadPedalBinds();
+            LoadPedalBinds(true);
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs args)
+        {
+            if (currentPedalToSet == Pedal.NONE)
+                return;
+
+            if (args.LeftButton == MouseButtonState.Pressed)
+            {
+                SavePedalBind(currentPedalToSet, (uint)Config.MOUSE_BUTTON_CODES.Left);
+            }
+            else if (args.MiddleButton == MouseButtonState.Pressed)
+            {
+                SavePedalBind(currentPedalToSet, (uint)Config.MOUSE_BUTTON_CODES.Middle);
+            }
+            else if (args.RightButton == MouseButtonState.Pressed)
+            {
+                SavePedalBind(currentPedalToSet, (uint)Config.MOUSE_BUTTON_CODES.Right);
+            }
+
+            StatusText.Content = BIND_BUTTON_TEXT;
+            currentPedalToSet = Pedal.NONE;
+            LoadPedalBinds(true);
         }
 
         private void SavePedalBind(Pedal pedal, uint keyCode)
@@ -116,7 +139,6 @@ namespace biped
         private Key VKeyToKey(int vKey)
         {
             return KeyInterop.KeyFromVirtualKey(vKey);
-            
         }
 
         [DllImport("user32.dll")]
@@ -133,16 +155,35 @@ namespace biped
             return (int)MapVirtualKey(scanCode, MapType.MAPVK_VSC_TO_VK);
         }
 
-        private void LoadPedalBinds()
+        private string GetLabelContent(uint btnCode)
+        {
+            switch (btnCode)
+            {
+                case (uint)Config.MOUSE_BUTTON_CODES.Left:
+                    return $"Mouse Btn Left ({btnCode})";
+                case (uint)Config.MOUSE_BUTTON_CODES.Middle:
+                    return $"Mouse Btn Middle ({btnCode})";
+                case (uint)Config.MOUSE_BUTTON_CODES.Right:
+                    return $"Mouse Btn Right ({btnCode})";
+                default:
+                    return $"{VKeyToKey(VKeyFromScanCode(btnCode)).ToString()} ({btnCode})";
+            }
+        }
+
+        private void LoadPedalBinds(bool update = false)
         {
             uint left = settings.GetFromRegistry(Pedal.LEFT.ToString("g"));
             uint middle = settings.GetFromRegistry(Pedal.MIDDLE.ToString("g"));
             uint right = settings.GetFromRegistry(Pedal.RIGHT.ToString("g"));
 
             config = new Config(left, middle, right);
-            LeftText.Content = $"{VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left})";
-            MiddleText.Content = $"{VKeyToKey(VKeyFromScanCode(middle)).ToString()} ({middle})";
-            RightText.Content = $"{VKeyToKey(VKeyFromScanCode(right)).ToString()} ({right})";
+
+            LeftText.Content = GetLabelContent(left);
+            MiddleText.Content = GetLabelContent(middle);
+            RightText.Content = GetLabelContent(right);
+
+            if (update)
+                biped.UpdateConfig(config);
         }
 
         private void LeftText_PreviewMouseUp(object sender, MouseButtonEventArgs e)

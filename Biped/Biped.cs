@@ -34,7 +34,7 @@ namespace biped
         private PedalState RightState = PedalState.UP;
 
         private readonly Input input = new Input();
-        private readonly Config config;
+        private Config config { get; set; }
         public bool DeviceConnected { get; set; }
 
         public Biped(Config config)
@@ -54,6 +54,11 @@ namespace biped
 
                 device.ReadReport(OnReport);
             }
+        }
+
+        public void UpdateConfig(Config config)
+        {
+            this.config = config;
         }
 
         private void OnReport(HidReport report)
