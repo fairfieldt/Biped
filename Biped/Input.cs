@@ -30,59 +30,57 @@ namespace biped
 
             INPUT input;
 
-            //if (keyCode == 1000 || keyCode == 2000 || keyCode == 3000)
-            if (Enum.IsDefined(typeof(CustomButtons.MOUSE_BUTTON_CODES), keyCode))
+            switch (keyCode)
             {
-                uint mFlags = 0;
-                switch (keyCode)
-                {
-                    case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseLeft:
-                        mFlags = state == PedalState.UP ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN;
-                        break;
-                    case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseMiddle:
-                        mFlags = state == PedalState.UP ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN;
-                        break;
-                    case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseRight:
-                        mFlags = state == PedalState.UP ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN;
-                        break;
-                    default:
-                        return;
-                }
+                case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseLeft:
+                    input = NewMouseClickInput(state == PedalState.UP ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_LEFTDOWN);
+                    break;
+                case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseMiddle:
+                    input = NewMouseClickInput(state == PedalState.UP ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_MIDDLEDOWN);
+                    break;
+                case (uint)CustomButtons.MOUSE_BUTTON_CODES.MouseRight:
+                    input = NewMouseClickInput(state == PedalState.UP ? MOUSEEVENTF_RIGHTUP : MOUSEEVENTF_RIGHTDOWN);
+                    break;
+                default:
+                    input = new INPUT
+                    {
+                        Type = 1
+                    };
+                    input.Data.Keyboard = new KEYBDINPUT
+                    {
+                        Vk = 0,
+                        Scan = (ushort)keyCode,
+                        Flags = flags,
+                        Time = 0,
+                        ExtraInfo = IntPtr.Zero
+                    };
+                    
+                    break;
+            }
 
-                input = new INPUT
-                {
-                    Type = 0
-                };
-                input.Data.Mouse = new MOUSEINPUT
-                {
-                    X = 0,
-                    Y = 0,
-                    MouseData = 0,
-                    Flags = mFlags,
-                    Time = 0,
-                    ExtraInfo = IntPtr.Zero
-                };
-            }
-            else
-            {
-                input = new INPUT
-                {
-                    Type = 1
-                };
-                input.Data.Keyboard = new KEYBDINPUT
-                {
-                    Vk = 0,
-                    Scan = (ushort)keyCode,
-                    Flags = flags,
-                    Time = 0,
-                    ExtraInfo = IntPtr.Zero
-                };
-            }
             INPUT[] inputs = new INPUT[] { input };
             if (SendInput(1, inputs, Marshal.SizeOf(typeof(INPUT))) == 0)
             {
                 Console.WriteLine("Error in sendKey");
             }
+        }
+
+        private INPUT NewMouseClickInput(uint flags)
+        {
+            var i = new INPUT
+            {
+                Type = 0
+            };
+            i.Data.Mouse = new MOUSEINPUT
+            {
+                X = 0,
+                Y = 0,
+                MouseData = 0,
+                Flags = flags,
+                Time = 0,
+                ExtraInfo = IntPtr.Zero
+            };
+            return i;
         }
 
         /// <summary>
