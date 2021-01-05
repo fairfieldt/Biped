@@ -14,7 +14,7 @@ exit right click on the tray icon.
 
 ## Command Line Options
 
-The application also allows launching with command line parameters to configure your pedals when launching the application.
+The application also supports command line parameters to configure your pedals when launching the application.
 
 ```biped2.exe -left [keycode] -middle [keycode] -right [keycode]```
 
