@@ -65,6 +65,7 @@
     </ApplicationDefinition>
     <Compile Include="Biped.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="CustomButtonCodes.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Registry.cs" />
     <Page Include="MainWindow.xaml">
