@@ -7,7 +7,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="Biped" Height="190" Width="260"
-        KeyUp="OnKeyUp" Closing="Window_Closing" >
+        KeyUp="OnKeyUp" Closing="Window_Closing" MouseDown="OnMouseDown">
 
 
     <Window.Resources>

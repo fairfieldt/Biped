@@ -6,6 +6,7 @@ The existing Pedable application lacks some features (multiple pedals down at on
 
 This is a super simple alternative for those who want to send keyboard input with their foot pedals.
 
+
 Biped includes a simple configuration GUI and runs persistently in the system tray.
 
 
