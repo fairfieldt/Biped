@@ -27,3 +27,10 @@ Biped doesn't need to be installed and should be started directly. To start Bipe
 That's it! Once started, Biped will run in the system tray. To exit, right click on the system tray icon.
 
 Enjoy!
+
+
+## Command Line Options
+
+Biped also supports command line parameters to configure your pedals when launching the application.
+
+```biped2.exe -left [keycode] -middle [keycode] -right [keycode]```
