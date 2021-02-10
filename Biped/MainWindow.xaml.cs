@@ -115,19 +115,6 @@ namespace biped
             LoadPedalBinds();
         }
 
-        public void ApplyCommandLineBindings(uint left, uint middle, uint right)
-        {
-            System.Diagnostics.Debug.WriteLine($"Applying Keybind Left: {VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left}), " +
-                            $"Middle: {VKeyToKey(VKeyFromScanCode(middle)).ToString()} ({middle}), " +
-                            $"Right: {VKeyToKey(VKeyFromScanCode(right)).ToString()} ({right})");
-
-            SavePedalBind(Pedal.LEFT, left);
-            SavePedalBind(Pedal.MIDDLE, middle);
-            SavePedalBind(Pedal.RIGHT, right);
-
-            LoadPedalBinds();
-        }
-
         private void RecordPedalBind(Pedal pedal)
         {
             if (biped.DeviceConnected)
