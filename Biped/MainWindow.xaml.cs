@@ -2,11 +2,11 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 
 using System.Windows.Input;
-
-
+using System.Windows.Interop;
 
 namespace biped
 {
@@ -50,15 +50,69 @@ namespace biped
         private DateTime lastBindTime;
 
         private Pedal currentPedalToSet = Pedal.NONE;
+
+        static Mutex mutex = new Mutex(true, "Biped-SingleInstance");
+
+        public const int HWND_BROADCAST = 0xffff;
+        public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+        [DllImport("user32")]
+        public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+        [DllImport("user32")]
+        public static extern int RegisterWindowMessage(string message);
+        [DllImport("user32")]
+        public static extern IntPtr FindWindow(string classname, string windowname);
         public MainWindow()
         {
-            InitializeComponent();
-            LoadPedalBinds();
-            biped = new Biped(config);
-            if (biped.DeviceConnected != true)
+            if (mutex.WaitOne(TimeSpan.Zero, true))
             {
-                StatusText.Content = NO_DEVICE_DETECTED_TEXT;
+                InitializeComponent();
+                LoadPedalBinds();
+                biped = new Biped(config);
+                if (biped.DeviceConnected != true)
+                {
+                    StatusText.Content = NO_DEVICE_DETECTED_TEXT;
+                }
             }
+            else
+            {
+                IntPtr hwnd = FindWindow(null, "Biped");
+                if (hwnd != IntPtr.Zero)
+                {
+                    PostMessage(hwnd, WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
+                }
+                Application.Current.Shutdown();
+
+            }
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
+            source.AddHook(WndProc);
+
+        }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == WM_SHOWME)
+            {
+                Show();
+            }
+            return IntPtr.Zero;
+        }
+
+
+        public void ApplyCommandLineBindings(uint left, uint middle, uint right)
+        {
+            System.Diagnostics.Debug.WriteLine($"Applying Keybind Left: {VKeyToKey(VKeyFromScanCode(left)).ToString()} ({left}), " +
+                            $"Middle: {VKeyToKey(VKeyFromScanCode(middle)).ToString()} ({middle}), " +
+                            $"Right: {VKeyToKey(VKeyFromScanCode(right)).ToString()} ({right})");
+
+            SavePedalBind(Pedal.LEFT, left);
+            SavePedalBind(Pedal.MIDDLE, middle);
+            SavePedalBind(Pedal.RIGHT, right);
+
+            LoadPedalBinds();
         }
 
         public void ApplyCommandLineBindings(uint left, uint middle, uint right)
