@@ -1,23 +1,29 @@
 # Biped
-simple Windows keyboard emulation for Infinity Foot Controls
 
+Biped is better Windows keyboard emulation software for Infinity Foot Control pedals (e.g. [these](https://www.amazon.com/Infinity-Digital-Control-Computer-USB2/dp/B002MY6I7G)).
 
 The existing Pedable application lacks some features (multiple pedals down at once) and has some issues (dropping pedal up events).
 
 This is a super simple alternative for those who want to send keyboard input with their foot pedals.
 
-Pedals can also be configured to send left, right, or middle mouse click events.
 
-Run Biped.exe and use the GUI to configure your pedals.  Configuration is stored in the registry.  Biped will run in the system tray; to
-exit right click on the tray icon.
+Biped includes a simple configuration GUI and runs persistently in the system tray.
 
 
-## Command Line Options
+### Installation and Use
 
-The application also supports command line parameters to configure your pedals when launching the application.
+Biped doesn't need to be installed and should be started directly. To start Biped
 
-```biped2.exe -left [keycode] -middle [keycode] -right [keycode]```
+1) Download the latest Biped release from Releases, here:
 
-The parameters can be in any order but all three pedals must be mapped to a value.
+  * https://github.com/fairfieldt/Biped/releases
 
-Key codes can be obtained by viewing the values displayed in the GUI.
+2) Unzip the contents of `biped.zip` to your desired location.
+
+3) Run `biped2.exe`.
+
+4) Configure each pedal's keypress (e.g. left, center, right) in the GUI. Configuration is stored in the registery.
+
+That's it! Once started, Biped will run in the system tray. To exit, right click on the system tray icon.
+
+Enjoy!
